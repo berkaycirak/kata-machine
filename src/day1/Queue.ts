@@ -33,6 +33,7 @@ export default class Queue<T> {
         this.head = this.head.next;
         return head.value;
     }
+    // Peek helps us to see what is inside the head
     peek(): T | undefined {
         return this.head?.value;
     }
