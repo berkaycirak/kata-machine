@@ -1,3 +1,24 @@
-export default function pre_order_search(head: BinaryNode<number>): number[] {
+// Base Case
+// we will stop recursing when there is no more children in the node.
 
+function walk(curr: BinaryNode<number> | null, path: number[]): number[] {
+    // Base case
+    if (!curr) {
+        return path;
+    }
+
+    // Recursive Case
+
+    // pre
+    path.push(curr.value);
+    // recurse
+    walk(curr.left, path);
+    walk(curr.right, path);
+    // post
+
+    return path;
+}
+
+export default function pre_order_search(head: BinaryNode<number>): number[] {
+    return walk(head, []);
 }
