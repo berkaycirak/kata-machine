@@ -13,10 +13,11 @@ function walk(curr: BinaryNode<number> | null, path: number[]): number[] {
     walk(curr.right, path);
     // post
     path.push(curr.value);
-
     return path;
 }
 
 export default function post_order_search(head: BinaryNode<number>): number[] {
-    return walk(head, []);
+    const result = walk(head, []);
+    console.log(result);
+    return result;
 }

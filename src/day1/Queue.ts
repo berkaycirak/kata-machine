@@ -31,6 +31,10 @@ export default class Queue<T> {
         this.length--;
         const head = this.head;
         this.head = this.head.next;
+        head.next = undefined;
+        if (this.length === 0) {
+            this.tail = undefined;
+        }
         return head.value;
     }
     // Peek helps us to see what is inside the head

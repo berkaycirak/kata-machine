@@ -1,8 +1,11 @@
 export default function bfs(head: BinaryNode<number>, needle: number): boolean {
     const q = [head];
-    while (q.length) {
-        const curr = q.shift() as BinaryNode<number>;
 
+    while (q.length) {
+        const curr = q.shift() as BinaryNode<number> | undefined | null;
+        if (!curr) {
+            continue;
+        }
         // search
         if (curr.value === needle) {
             return true;
@@ -14,7 +17,6 @@ export default function bfs(head: BinaryNode<number>, needle: number): boolean {
         if (curr.right) {
             q.push(curr.right);
         }
-
-        return false;
     }
+    return false;
 }
