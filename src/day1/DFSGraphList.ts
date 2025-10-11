@@ -17,7 +17,6 @@ function walk(
     seen: boolean[],
 ): boolean {
     // Base cases
-
     if (seen[currentVertex]) return false;
     seen[currentVertex] = true;
     path.push(currentVertex);
