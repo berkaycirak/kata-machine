@@ -12,8 +12,8 @@ export default class LRU<K, V> {
     private length: number;
     private head?: Node<V>;
     private tail?: Node<V>;
-
     private lookup: Map<K, Node<V>>;
+    // We need that to find key by giving Node, so that we can evict the key from the Map when capacity is exceed!
     private reverseLookup: Map<Node<V>, K>;
 
     constructor(private capacity: number = 10) {
@@ -24,13 +24,15 @@ export default class LRU<K, V> {
     }
 
     update(key: K, value: V): void {
+        // does it exist?
+
         let node = this.lookup.get(key);
         if (!node) {
-            this.length++;
+            // if it doesn't we need to insert
             node = createNode(value);
+            this.length++;
             this.prepend(node);
             this.trimCache();
-
             this.lookup.set(key, node);
             this.reverseLookup.set(node, key);
         } else {
@@ -39,24 +41,23 @@ export default class LRU<K, V> {
             node.value = value;
         }
 
-        // does it exist?
-        // if it doesn't we need to insert
         //  -check capacity and evict if over
         // if it does, we need to update to the front of the list and update the value
     }
     get(key: K): V | undefined {
         // check the cache for existence
         const node = this.lookup.get(key);
-        if (!node) return undefined;
+        if (!node) {
+            return undefined;
+        }
 
         // update the value we found and move it to the front
         this.detach(node);
         this.prepend(node);
-
         // return out the value found or undefined if not exist
-
         return node.value;
     }
+    // Remove out the links of the current node
     private detach(node: Node<V>) {
         if (node.prev) {
             node.prev.next = node.next;
@@ -64,17 +65,13 @@ export default class LRU<K, V> {
         if (node.next) {
             node.next.prev = node.prev;
         }
-
-        if (this.length === 1) {
-            this.tail = this.head = undefined;
-        }
         if (this.head === node) {
             this.head = this.head.next;
         }
         if (this.tail === node) {
-            this.tail = this.tail.prev;
+            this.tail === this.tail.prev;
         }
-
+        // Break the links of the current node
         node.next = undefined;
         node.prev = undefined;
     }
@@ -83,23 +80,19 @@ export default class LRU<K, V> {
             this.head = this.tail = node;
             return;
         }
-
         node.next = this.head;
         this.head.prev = node;
         this.head = node;
     }
-
-    // That function ensures that our cache is not greater than capacity
     private trimCache(): void {
         if (this.length <= this.capacity) {
             return;
         }
-        const tail = this.tail as Node<V>;
+        const tail = this.tail;
         this.detach(this.tail as Node<V>);
-
-        const key = this.reverseLookup.get(tail) as K;
-        this.lookup.delete(key);
-        this.reverseLookup.delete(tail);
+        const key = this.reverseLookup.get(tail as Node<V>);
+        this.lookup.delete(key as K);
+        this.reverseLookup.delete(tail as Node<V>);
         this.length--;
     }
 }
